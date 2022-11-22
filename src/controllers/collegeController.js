@@ -13,7 +13,7 @@ const createcollege = async function (req, res) {
         };
         let duplicateName = await collegeModel.findOne({ name: name });
         if (duplicateName) {
-          return res.status(400).send({ status: false, message: "College name already existed" });
+          return res.status(400).send({ status: false, msg: "College name already existed" });
         };
         if (!fullName) {
             return res.status(400).send({ status: false, msg: "Please provide fullName" })
@@ -37,9 +37,9 @@ const getdetailsofinterns= async function(req, res){
          let {collegeName}=req.query;
       if(!collegeName){
         return res.status(400).send({status: false, msg: "Please provide collegeName"})};
-      let collegeId= await collegeModel.find({name:collegeName}).select({_id:1})
-      if (collegeId.length == 0) {
-        return res.status(404).send({status: false,message: "Please enter a valid name abbreviation in lowercase"});
+      let collegeId= await collegeModel.findOne({name:collegeName}).select({_id:1})
+      if (!collegeId) {
+        return res.status(404).send({status: false,message: "Please provide valid collegeName"});
       }
       let interns= await internModel.find({collegeId:collegeId}).select({_id:1,name:1,email:1,mobile:1})
       if (interns.length == 0) {

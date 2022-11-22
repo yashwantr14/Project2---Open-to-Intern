@@ -18,13 +18,21 @@ const createintern = async function (req, res) {
         };
         if (!email.match(emailValidation)) {
             return res.status(400).send({ status: true, msg: "Please provide valid email" })
-        }
+        };
+        let duplicateemail = await internModel.findOne({ email: email });
+        if (duplicateemail) {
+          return res.status(400).send({ status: false, message: "email already existed" });
+        };
         if (!mobile) {
             return res.status(400).send({ status: false, msg: "Please provide mobile" })
         };
         if (!mobile.match(mobileValidation)) {
             return res.status(400).send({ status: false, msg: "Please provide Valid Mobile Number" })
         }
+        let duplicateMobile = await internModel.findOne({ mobile: mobile });
+        if (duplicateMobile) {
+          return res.status(400).send({ status: false, message: "mobile number already existed" });
+        };
         if (!collegeName) {
             return res.status(400).send({ status: false, msg: "Please provide collegeName" })
         };
