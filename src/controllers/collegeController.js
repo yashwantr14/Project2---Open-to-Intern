@@ -28,7 +28,7 @@ const createcollege = async function (req, res) {
       return res.status(400).send({ status: false, msg: "Enter valid name" })
     };
     if (!name.match(nameregex)) {
-      return res.status(400).send({ status: false, message: "Please provide invalid name" })
+      return res.status(400).send({ status: false, message: "Please provide valid name" })
     };
     let duplicateName = await collegeModel.findOne({ name: name });
     if (duplicateName) {
