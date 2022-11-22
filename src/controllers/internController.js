@@ -2,7 +2,7 @@ const collegeModel = require('../models/collegeModel');
 const internModel = require('../models/internModel');
 const emailValidation = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const mobileValidation = /^([+]\d{2})?\d{10}$/
-const nameregex= /^[a-zA-Z_ ]{1,30}$/
+const nameregex = /^[a-zA-Z_ ]{1,30}$/
 
 
 const createintern = async function (req, res) {
@@ -15,32 +15,44 @@ const createintern = async function (req, res) {
         if (!name) {
             return res.status(400).send({ status: false, message: "Please provide name" })
         };
-        if(!name.match(nameregex)){
-            return res.status(400).send({status: false, message: "Please provide valid name"})
+        if (typeof name !== "string" || name.trim().length === 0) {
+            return res.status(400).send({ status: false, msg: "Enter valid name" })
+        };
+        if (!name.match(nameregex)) {
+            return res.status(400).send({ status: false, message: "Please provide valid name" })
         };
         if (!email) {
             return res.status(400).send({ status: false, message: "Please provide email" })
         };
+        if (typeof email !== "string" || email.trim().length === 0) {
+            return res.status(400).send({ status: false, msg: "Enter valid email" })
+        };
         if (!email.match(emailValidation)) {
-            return res.status(400).send({ status: true, message: "Please provide valid email" })
+            return res.status(400).send({ status: false, message: "Please provide valid email" })
         };
         let duplicateemail = await internModel.findOne({ email: email });
         if (duplicateemail) {
-          return res.status(400).send({ status: false, message: "email already existed" });
+            return res.status(400).send({ status: false, message: "email already existed" });
         };
         if (!mobile) {
             return res.status(400).send({ status: false, message: "Please provide mobile" })
         };
+        if (typeof mobile !== "string" || mobile.trim().length === 0) {
+            return res.status(400).send({ status: false, msg: "Enter valid mobile" })
+        };
         if (!mobile.match(mobileValidation)) {
             return res.status(400).send({ status: false, message: "Please provide Valid Mobile Number" })
-        }
+        };
         let duplicateMobile = await internModel.findOne({ mobile: mobile });
         if (duplicateMobile) {
-          return res.status(400).send({ status: false, message: "mobile number already existed" });
+            return res.status(400).send({ status: false, message: "mobile number already existed" });
         };
         if (!collegeName) {
             return res.status(400).send({ status: false, message: "Please provide collegeName" })
         };
+        if (typeof collegeName !== "string" || collegeName.trim().length === 0) {
+            return res.status(400).send({ status: false, msg: "Enter valid collegeName" })
+        }
         let collegeData = await collegeModel.findOne({ name: collegeName });
         if (!collegeData)
             return res.status(404).send({ status: false, message: "No Such College Found" });
