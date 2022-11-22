@@ -43,7 +43,7 @@ const createcollege = async function (req, res) {
     if (typeof fullName !== "string" || fullName.trim().length === 0) {
       return res.status(400).send({ status: false, msg: "Enter valid fullName" })
     };
-    if (!fullName.match(fullNameRegex)) return res.status(400).send({ status: false, message: "this is invaild full name" })
+    if (!fullName.match(fullNameRegex)) return res.status(400).send({ status: false, message: "Please provide vaild fullName" })
 
     let duplicatefullName = await collegeModel.findOne({ fullName: fullName }); // inDB //req.body
     if (duplicatefullName) {
@@ -58,7 +58,7 @@ const createcollege = async function (req, res) {
     if (typeof logoLink !== "string" || logoLink.trim().length === 0) {
       return res.status(400).send({ status: false, msg: "Enter valid logoLink" })
     };
-    if (!logoLink.match(logoLinkRegex)) return res.status(400).send({ status: false, message: "invaild logo link " })
+    if (!logoLink.match(logoLinkRegex)) return res.status(400).send({ status: false, message: "Please provide vaild logoLink" })
 
     // ==== create colleges =======//
 
