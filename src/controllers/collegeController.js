@@ -1,6 +1,17 @@
 const collegeModel = require('../models/collegeModel');
 const internModel = require('../models/internModel');
+
+
+// =================== regex =================//
+
 const nameregex = /^[a-zA-Z ]{1,30}$/
+const logoLinkRegex = /^https?:\/\/(.+\/)+.+(\.(png|jpg|jpeg))$/i
+const fullNameRegex = /^[A-Za-z][A-Za-z ,._]{5,50}$/
+
+
+
+
+// ==================== 1 API============//
 
 const createcollege = async function (req, res) {
   try {
@@ -8,6 +19,8 @@ const createcollege = async function (req, res) {
     if (!Object.keys(req.body).length > 0) {
       return res.status(400).send({ status: false, message: "Please provide Details" })
     };
+    // =========== name validation========//
+
     if (!name) {
       return res.status(400).send({ status: false, message: "Please provide name" })
     };
@@ -15,45 +28,66 @@ const createcollege = async function (req, res) {
       return res.status(400).send({ status: false, msg: "Enter valid name" })
     };
     if (!name.match(nameregex)) {
-      return res.status(400).send({ status: false, message: "Please provide valid name" })
+      return res.status(400).send({ status: false, message: "Please provide invalid name" })
     };
     let duplicateName = await collegeModel.findOne({ name: name });
     if (duplicateName) {
       return res.status(400).send({ status: false, message: "College name already existed" });
     };
+
+    //  ======= full name validation =======//
+
     if (!fullName) {
       return res.status(400).send({ status: false, message: "Please provide fullName" })
     };
     if (typeof fullName !== "string" || fullName.trim().length === 0) {
       return res.status(400).send({ status: false, msg: "Enter valid fullName" })
     };
+    if (!fullName.match(fullNameRegex)) return res.status(400).send({ status: false, message: "this is invaild full name" })
+
     let duplicatefullName = await collegeModel.findOne({ fullName: fullName }); // inDB //req.body
     if (duplicatefullName) {
       return res.status(400).send({ status: false, message: "College fullName already existed" });
     };
+
+    // ======== logo link validation=======//
+
     if (!logoLink) {
       return res.status(400).send({ status: false, message: "Please provide logolink" })
     };
     if (typeof logoLink !== "string" || logoLink.trim().length === 0) {
       return res.status(400).send({ status: false, msg: "Enter valid logoLink" })
     };
+    if (!logoLink.match(logoLinkRegex)) return res.status(400).send({ status: false, message: "invaild logo link " })
+
+    // ==== create colleges =======//
+
     let savedData = await collegeModel.create(req.body)
-    return res.status(201).send({ status: true, data: savedData })
+    let result = { name: savedData.name, fullName: savedData.fullName, logoLink: savedData.logoLink, isDeleted: savedData.isDeleted }
+    return res.status(201).send({ status: true, data: result })
+
   } catch (error) {
     res.status(500).send({ status: false, message: error.message })
   }
 }
 
+
+// ================================== 2 API==============//
+
+
 const getdetailsofinterns = async function (req, res) {
   try {
+
     let { collegeName } = req.query;
     if (!collegeName) {
       return res.status(400).send({ status: false, message: "Please provide collegeName" })
     };
+
     let collegeId = await collegeModel.findOne({ name: collegeName }).select({ _id: 1 })
     if (!collegeId) {
       return res.status(404).send({ status: false, message: "Please provide valid collegeName" });
     }
+    
     let interns = await internModel.find({ collegeId: collegeId }).select({ _id: 1, name: 1, email: 1, mobile: 1 })
     if (interns.length == 0) {
       var x = `no interns of ${collegeName} college`;
