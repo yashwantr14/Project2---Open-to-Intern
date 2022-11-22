@@ -2,39 +2,44 @@ const collegeModel = require('../models/collegeModel');
 const internModel = require('../models/internModel');
 const emailValidation = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 const mobileValidation = /^([+]\d{2})?\d{10}$/
+const nameregex= /^[a-zA-Z_ ]{1,30}$/
+
 
 const createintern = async function (req, res) {
     try {
         const data = req.body;
         let { name, email, mobile, collegeName } = req.body
         if (!Object.keys(req.body).length > 0) {
-            return res.status(400).send({ status: false, msg: "Please provide Details" })
+            return res.status(400).send({ status: false, message: "Please provide Details" })
         };
         if (!name) {
-            return res.status(400).send({ status: false, msg: "Please provide name" })
+            return res.status(400).send({ status: false, message: "Please provide name" })
+        };
+        if(!name.match(nameregex)){
+            return res.status(400).send({status: false, message: "Please provide valid name"})
         };
         if (!email) {
-            return res.status(400).send({ status: false, msg: "Please provide email" })
+            return res.status(400).send({ status: false, message: "Please provide email" })
         };
         if (!email.match(emailValidation)) {
-            return res.status(400).send({ status: true, msg: "Please provide valid email" })
+            return res.status(400).send({ status: true, message: "Please provide valid email" })
         };
         let duplicateemail = await internModel.findOne({ email: email });
         if (duplicateemail) {
           return res.status(400).send({ status: false, message: "email already existed" });
         };
         if (!mobile) {
-            return res.status(400).send({ status: false, msg: "Please provide mobile" })
+            return res.status(400).send({ status: false, message: "Please provide mobile" })
         };
         if (!mobile.match(mobileValidation)) {
-            return res.status(400).send({ status: false, msg: "Please provide Valid Mobile Number" })
+            return res.status(400).send({ status: false, message: "Please provide Valid Mobile Number" })
         }
         let duplicateMobile = await internModel.findOne({ mobile: mobile });
         if (duplicateMobile) {
           return res.status(400).send({ status: false, message: "mobile number already existed" });
         };
         if (!collegeName) {
-            return res.status(400).send({ status: false, msg: "Please provide collegeName" })
+            return res.status(400).send({ status: false, message: "Please provide collegeName" })
         };
         let collegeData = await collegeModel.findOne({ name: collegeName });
         if (!collegeData)
