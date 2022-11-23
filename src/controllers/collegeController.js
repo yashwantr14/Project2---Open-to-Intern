@@ -1,11 +1,11 @@
 const collegeModel = require('../models/collegeModel');
 const internModel = require('../models/internModel');
+const axios=require('axios')
 
 
 // =================== regex =================//
 
 const nameregex = /^[a-zA-Z ]{1,30}$/
-const logoLinkRegex = /^https?:\/\/(.+\/)+.+(\.(png|jpg|jpeg))$/i
 const fullNameRegex = /^[A-Za-z][A-Za-z ,._]{5,50}$/
 
 
@@ -58,7 +58,11 @@ const createcollege = async function (req, res) {
     if (typeof logoLink !== "string" || logoLink.trim().length === 0) {
       return res.status(400).send({ status: false, msg: "Enter valid logoLink" })
     };
-    if (!logoLink.match(logoLinkRegex)) return res.status(400).send({ status: false, message: "Please provide valid logoLink" })
+    let linkIscorrect
+    await axios.get(logoLink)
+    .then((res)=>{linkIscorrect=true})
+    .catch((error)=>{linkIscorrect=false})
+    if (linkIscorrect===false) return res.status(400).send({ status: false, message: "Please provide valid logoLink" })
 
     // ==== create colleges =======//
 
