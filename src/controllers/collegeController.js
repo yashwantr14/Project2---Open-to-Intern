@@ -56,7 +56,7 @@ const createcollege = async function (req, res) {
       return res.status(400).send({ status: false, message: "Please provide logolink" })
     };
     if (typeof logoLink !== "string" || logoLink.trim().length === 0) {
-      return res.status(400).send({ status: false, msg: "Enter valid logoLink" })
+      return res.status(400).send({ status: false, message: "Enter valid logoLink" })
     };
     let linkIscorrect
     await axios.get(logoLink)
