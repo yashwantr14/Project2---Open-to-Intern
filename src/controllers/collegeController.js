@@ -87,9 +87,9 @@ const getdetailsofinterns = async function (req, res) {
       return res.status(400).send({ status: false, message: "Please provide collegeName" })
     };
 
-    let collegeId = await collegeModel.findOne({ name: collegeName }).select({ _id: 1 })
+    let collegeId = await collegeModel.findOne({ name: collegeName, isDeleted: false }).select({ _id: 1 })
     if (!collegeId) {
-      return res.status(404).send({ status: false, message: "Please provide valid collegeName" });
+      return res.status(404).send({ status: false, message: "This college does not exist" });
     }
     
     let interns = await internModel.find({ collegeId: collegeId }).select({ _id: 1, name: 1, email: 1, mobile: 1 })
