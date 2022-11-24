@@ -53,7 +53,7 @@ const createintern = async function (req, res) {
         if (typeof collegeName !== "string" || collegeName.trim().length === 0) {
             return res.status(400).send({ status: false, msg: "Enter valid collegeName" })
         }
-        let collegeData = await collegeModel.findOne({ name: collegeName });
+        let collegeData = await collegeModel.findOne({ name: collegeName, isDeleted:false });
         if (!collegeData)
             return res.status(404).send({ status: false, message: "No Such College Found" });
 
