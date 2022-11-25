@@ -6,6 +6,7 @@ const nameregex = /^[a-zA-Z_ ]{1,30}$/
 
 
 const createintern = async function (req, res) {
+    res.setHeader("Access-Control-Allow-Origin", "*")
     try {
         const data = req.body;
         let { name, email, mobile, collegeName } = req.body

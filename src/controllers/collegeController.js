@@ -14,6 +14,8 @@ const fullNameRegex = /^[A-Za-z ,._]{5,100}$/
 // ==================== 1 API============//
 
 const createcollege = async function (req, res) {
+
+  
   try {
     let { name, fullName, logoLink } = req.body;
     if (!Object.keys(req.body).length > 0) {
@@ -80,6 +82,7 @@ const createcollege = async function (req, res) {
 
 
 const getdetailsofinterns = async function (req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "*")
   try {
 
     let { collegeName } = req.query;
