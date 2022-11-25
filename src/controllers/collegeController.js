@@ -6,7 +6,7 @@ const axios=require('axios')
 // =================== regex =================//
 
 const nameregex = /^[a-zA-Z ]{1,30}$/
-const fullNameRegex = /^[A-Za-z][A-Za-z ,._]{5,50}$/
+const fullNameRegex = /^[A-Za-z ,._]{5,100}$/
 
 
 
